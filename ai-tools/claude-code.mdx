@@ -34,16 +34,16 @@ Claude lists the projects ShadowGit tracks and which one you're working in.
 
 ## Using it
 
-Claude Code tells ShadowGit which folder you started it in, so you never name the project: ShadowGit uses the tracked project that contains that folder. For what to ask, see [What to ask](/installation#what-to-ask).
+Claude Code tells ShadowGit which folder you started it in. When that folder is inside a tracked project, you don't need to name the project: ShadowGit uses that one. For what to ask, see [What to ask](/installation#what-to-ask).
 
 ### Skip the permission prompts
 
-Claude Code may ask before it calls a ShadowGit tool. To allow all of them, add `mcp__shadowgit` to the `allow` list in `~/.claude/settings.json`:
+Claude Code may ask before it calls a ShadowGit tool. To allow all of them, add `mcp__shadowgit__*` to the `allow` list in `~/.claude/settings.json`:
 
 ```json
 {
   "permissions": {
-    "allow": ["mcp__shadowgit"]
+    "allow": ["mcp__shadowgit__*"]
   }
 }
 ```
@@ -56,9 +56,9 @@ You can also manage rules with the `/permissions` command.
 
 1. Run `claude mcp get shadowgit`. Its `Issue:` line says what went wrong.
 2. Check `node --version`: the server needs Node.js 20 or later, from the `PATH` Claude Code starts with.
-3. The first start downloads the server. Claude Code waits 30 seconds for it; on a slow connection, start Claude Code with a longer timeout, then reconnect from `/mcp`:
+3. The first start downloads the server, and Claude Code waits 30 seconds for it. On a slow connection, download it once in a terminal, stop it with `Ctrl+C` when it sits waiting, then reconnect from `/mcp`:
    ```bash
-   MCP_TIMEOUT=60000 claude
+   npx -y shadowgit-mcp-server
    ```
 
 ### Claude doesn't use ShadowGit
