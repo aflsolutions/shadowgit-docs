@@ -1,230 +1,217 @@
 ---
 title: "Installation"
-description: "Set up ShadowGit MCP server in 2 minutes"
+description: "Connect ShadowGit to Claude Code, Cursor or Claude Desktop in 2 minutes"
 ---
 
-## Prerequisites
+## Before you start
 
-Before you begin, make sure you have:
+1. **The ShadowGit app**, running and tracking at least one project ([Download ShadowGit](https://shadowgit.com)). Checkpoints need version 0.3.4 or later. To track a project, click **Add repository** in the app and pick its folder.
+2. **Node.js 20 or later** ([Download Node.js](https://nodejs.org)). Check with `node --version`.
+3. **Git** ([Download Git](https://git-scm.com/downloads)). Check with `git --version`.
 
-1. **Node.js 18+** installed ([Download Node.js](https://nodejs.org))
-2. **ShadowGit desktop app** running with at least one tracked repository ([Download ShadowGit](https://shadowgit.com))
-   - Available for Mac, Windows, and Linux
-3. **An AI tool** like Claude Code or Cursor
+You don't install the MCP server yourself: your AI tool starts it with `npx`, which downloads it the first time.
 
-## Install the MCP Server
+## Connect your AI tool
 
-### Option 1: npm (Recommended)
-
-Open your terminal and run:
-
-```bash
-npm install -g shadowgit-mcp-server
-```
-
-### Option 2: GitHub
-
-Clone and install from the source:
-
-```bash
-# Clone the repository
-git clone https://github.com/blade47/shadowgit-mcp.git
-cd shadowgit-mcp
-
-# Install dependencies and build
-npm install
-npm run build
-
-# Install globally
-npm install -g .
-```
-
-That's it. The MCP server is now installed globally on your system.
-
-## Configure your AI tool
-
-Once the MCP server is installed, you need to configure your AI assistant to use it. We have detailed guides for each tool:
-
-<CardGroup cols={2}>
+<Columns cols={2}>
   <Card
     title="Claude Code"
     icon="asterisk"
     href="/ai-tools/claude-code"
   >
-    One-command setup for Claude Code
+    One command, every project.
   </Card>
   <Card
     title="Cursor"
     icon="code-simple"
     href="/ai-tools/cursor"
   >
-    Complete Cursor configuration guide
+    One entry in `mcp.json`.
   </Card>
-</CardGroup>
+</Columns>
 
-## What your AI can now do
+### Claude Desktop
 
-Once configured, your AI assistant can use natural language to query your code history:
+1. Open Claude Desktop's **Settings** from the Claude menu (not the settings inside the chat window), go to **Developer** and click **Edit Config**. This opens `claude_desktop_config.json`, creating it if needed:
+   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+2. Add ShadowGit under `mcpServers`:
+   ```json
+   {
+     "mcpServers": {
+       "shadowgit": {
+         "command": "npx",
+         "args": ["-y", "shadowgit-mcp-server"]
+       }
+     }
+   }
+   ```
+3. Quit Claude Desktop completely and open it again.
 
-### Basic Commands
+### Upgrading from an older setup
 
-**List repositories:**
-```
-"Show me my ShadowGit repositories"
-"List all tracked projects"
-```
+Earlier versions of this page installed the server with `npm install -g shadowgit-mcp-server` and started it as `shadowgit-mcp-server`. That copy stays on the old version. Remove it:
 
-**View recent changes:**
-```
-"Show me the last 10 commits in my-project"
-"What changed in my-project in the last hour?"
-"Show me the diff between HEAD and 5 commits ago"
-```
-
-**Debug with history:**
-```
-"When did the login feature break?"
-"Show me all changes to authentication.js today"
-"What files were modified in the last 30 minutes?"
-```
-
-### Session Management (New!)
-
-**Control auto-commits:**
-```
-"Start a ShadowGit session for debugging"
-"Create a checkpoint with message 'Fixed auth bug'"
-"End the current ShadowGit session"
+```bash
+npm uninstall -g shadowgit-mcp-server
 ```
 
-Your AI will automatically use git commands like `log`, `diff`, `show`, and `blame` to answer your questions efficiently.
+Then set ShadowGit up again for your tool as described above. In Claude Code, run `claude mcp remove shadowgit` first.
+
+## Check that it works
+
+Ask your assistant:
+
+```text
+Show me my ShadowGit repositories
+```
+
+It lists the projects ShadowGit tracks, with their last snapshot and any active session.
+
+## What to ask
+
+Ask in your own words. These are examples.
+
+### Your history
+
+```text
+What changed in the last hour?
+```
+
+```text
+Show me the history of Header.tsx
+```
+
+Your assistant answers with read-only git commands (`log`, `diff`, `show`, `blame`) on the snapshots.
+
+In Claude Code you never need to name the project: ShadowGit uses the one you're working in. In Cursor and Claude Desktop, name it when ShadowGit tracks more than one:
+
+```text
+What changed in webshop in the last hour?
+```
+
+```text
+Show me the last 10 commits in webshop
+```
+
+### Sessions and checkpoints
+
+A session keeps an assistant's edits together. Before a change that touches several files:
+
+<Steps>
+  <Step title="Start a session">
+    ```text
+    Start a ShadowGit session for debugging
+    ```
+    Automatic snapshots pause for that project.
+  </Step>
+  <Step title="Let your assistant make its changes">
+    Automatic snapshots stay paused while it works.
+  </Step>
+  <Step title="Save a checkpoint">
+    ```text
+    Create a checkpoint with message 'Fixed auth bug'
+    ```
+    ShadowGit saves the changes as one snapshot with that title, leaving out the files listed in `.shadowgit-ignore`.
+  </Step>
+  <Step title="End the session">
+    ```text
+    End the current ShadowGit session
+    ```
+    Automatic snapshots resume.
+  </Step>
+</Steps>
+
+Your assistant may do this by itself when it's about to edit several files. The ShadowGit app shows active AI sessions in its sidebar, and ends a forgotten session on its own one to two hours after it started.
+
+Sessions and checkpoints need the ShadowGit app running. Reading history works while it's closed.
 
 ## Troubleshooting
 
-### "No repositories found"
+### "ShadowGit isn't running"
 
-Your ShadowGit app needs to be tracking at least one repository.
+Your assistant tried to start a session or save a checkpoint while the app was closed. Open ShadowGit and ask again.
 
-1. Open ShadowGit desktop app
-2. Click the "+" button to add a repository
-3. Wait for the first snapshot to be created
-4. Try again in your AI tool
+### "ShadowGit is not tracking any project yet"
 
-### "Command not found: shadowgit-mcp-server"
+Click **Add repository** in the app and pick your project's folder. ShadowGit takes the first snapshot right away.
 
-The npm installation might not be in your PATH.
+### "No ShadowGit project contains …"
 
-**Solution 1**: Use the full path
-```bash
-# Find where npm installed it
-npm list -g shadowgit-mcp-server
+Your assistant was started in a folder ShadowGit doesn't track, and ShadowGit tracks more than one project, so it can't pick one. Add that folder in the app, or name one of your tracked projects in your question.
 
-# Use the full path in your config
-"command": "/usr/local/bin/shadowgit-mcp-server"
-```
+### "This version of ShadowGit can't create checkpoints"
 
-**Solution 2**: Reinstall with npx
-```bash
-npx shadowgit-mcp-server
-```
+Update the ShadowGit app to 0.3.4 or later from [shadowgit.com](https://shadowgit.com).
 
-### "Repository not found"
+### Your assistant doesn't see ShadowGit
 
-Make sure you're using the exact repository name from ShadowGit.
+1. Check `node --version`: the MCP server needs Node.js 20 or later.
+2. Run the server in a terminal:
+   ```bash
+   npx -y shadowgit-mcp-server
+   ```
+   It should start and wait without printing anything. Stop it with `Ctrl+C`. If it prints an error instead, that error is the problem.
+3. Then follow the checks for your tool: [Claude Code](/ai-tools/claude-code#troubleshooting) or [Cursor](/ai-tools/cursor#troubleshooting). In Claude Desktop, quit the app completely and open it again; **Settings → Developer** shows whether ShadowGit connected, and the server's errors are in `mcp-server-shadowgit.log`:
+   - macOS: `~/Library/Logs/Claude`
+   - Windows: `%APPDATA%\Claude\logs`
 
-First ask your AI to list repositories:
-```
-"List my ShadowGit repositories"
-```
+## Installing on Linux
 
-This will show you the exact names to use. Then use the exact name when querying:
-```
-"Show me the git log for my-project"
-```
+ShadowGit comes as a `.deb`, an `.rpm` and an AppImage, for x64 and arm64. Download yours from [shadowgit.com](https://shadowgit.com).
 
-The repository name must match exactly what ShadowGit shows.
+<Tabs>
+  <Tab title="Debian and Ubuntu">
+    ```bash
+    sudo apt install ./ShadowGit-linux-*.deb
+    ```
+  </Tab>
+  <Tab title="Fedora">
+    ```bash
+    sudo dnf install ./ShadowGit-linux-*.rpm
+    ```
+  </Tab>
+  <Tab title="AppImage">
+    The AppImage runs on any distribution but needs FUSE 2:
 
-### Claude/Cursor doesn't see the MCP server
+    ```bash
+    # Ubuntu 24.04 and later
+    sudo apt install libfuse2t64
 
-1. Make sure you restarted the application after adding the config
-2. Check that Node.js is in your PATH: `node --version`
-3. Verify the server works manually: `shadowgit-mcp-server --version`
+    # Ubuntu 22.04 and Debian
+    sudo apt install libfuse2
 
-### Linux-specific notes
+    # Fedora
+    sudo dnf install fuse-libs
 
-#### Installing ShadowGit on Linux
+    # Arch
+    sudo pacman -S fuse2
+    ```
 
-ShadowGit is distributed as an AppImage for Linux, which works on all distributions.
+    Then make it executable and run it:
 
-**Prerequisites for AppImage:**
-```bash
-# Ubuntu/Debian
-sudo apt update
-sudo apt install libfuse2
+    ```bash
+    chmod +x ShadowGit-linux-*.AppImage
+    ./ShadowGit-linux-*.AppImage
+    ```
 
-# Fedora
-sudo dnf install fuse fuse-libs
+    Without FUSE, extract it and run it from the extracted folder:
 
-# Arch
-sudo pacman -S fuse2
-```
+    ```bash
+    ./ShadowGit-linux-*.AppImage --appimage-extract
+    ./squashfs-root/AppRun
+    ```
+  </Tab>
+</Tabs>
 
-**Running the AppImage:**
-```bash
-# Download the AppImage (choose your architecture)
-# For Intel/AMD systems: ShadowGit-linux-x86_64-*.AppImage
-# For ARM systems: ShadowGit-linux-arm64-*.AppImage
+## Where ShadowGit keeps its data
 
-# Make it executable
-chmod +x ShadowGit-linux-*.AppImage
+| What | Where |
+|---|---|
+| Snapshots | `.shadowgit.git` inside each project |
+| Files left out of snapshots | `.shadowgit-ignore` inside each project |
+| Project list and settings | macOS: `~/.shadowgit`<br />Windows: `%LOCALAPPDATA%\shadowgit`<br />Linux: `~/.local/share/shadowgit` |
 
-# Run ShadowGit
-./ShadowGit-linux-*.AppImage
-```
+ShadowGit creates `.shadowgit-ignore` with common dependency and build folders when you add a project. Edit it to leave out more.
 
-**Alternative if FUSE is not available:**
-```bash
-# Extract the AppImage
-./ShadowGit-linux-*.AppImage --appimage-extract
-
-# Run from extracted directory
-./squashfs-root/AppRun
-```
-
-#### Data Locations on Linux
-
-ShadowGit stores its data in the following locations:
-
-- **Shadow repositories**: `~/.shadowgit/`
-- **Application config**: `~/.config/ShadowGit/`
-- **Logs**: `~/.config/ShadowGit/logs/`
-- **Settings**: `~/.config/ShadowGit/config.json`
-
-Make sure you have proper read/write permissions for these directories.
-
-## Security Notes
-
-- **Read-only access**: The MCP server can only read your git history, never modify it
-- **Local only**: No data is sent to any external servers
-- **Safe commands only**: Dangerous git commands are blocked (no push, merge, rebase)
-
-## Next Steps
-
-Choose your AI tool to get started:
-
-<CardGroup cols={2}>
-  <Card
-    title="Claude Code Guide"
-    icon="asterisk"
-    href="/ai-tools/claude-code"
-  >
-    Detailed setup and usage with Claude Code
-  </Card>
-  <Card
-    title="Cursor Guide"
-    icon="code-simple"
-    href="/ai-tools/cursor"
-  >
-    Complete Cursor configuration and tips
-  </Card>
-</CardGroup>
+For the MCP server's own settings, see its [README on GitHub](https://github.com/aflsolutions/shadowgit-mcp#configuration).
