@@ -60,6 +60,11 @@ You can also manage rules with the `/permissions` command.
    ```bash
    npx -y shadowgit-mcp-server
    ```
+4. On native Windows (not WSL), if it still fails, add ShadowGit through `cmd /c`, which older Claude Code versions needed:
+   ```bash
+   claude mcp remove shadowgit
+   claude mcp add --scope user shadowgit -- cmd /c npx -y shadowgit-mcp-server
+   ```
 
 ### Claude doesn't use ShadowGit
 
