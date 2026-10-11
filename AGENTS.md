@@ -17,6 +17,7 @@
 - Search for existing information before adding new content. Avoid duplication unless it is done for a strategic reason
 - Check existing patterns for consistency
 - Start by making the smallest reasonable changes
+- Every phrase the docs suggest asking must appear word for word in `scripts/eval-docs-phrases.ts` in aflsolutions/shadowgit-mcp. Change both together and run `npm run eval` there
 
 ## Frontmatter requirements for pages
 - title: Clear, descriptive page title

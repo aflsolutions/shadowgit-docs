@@ -1,212 +1,82 @@
 ---
 title: "Claude Code"
-description: "Give Claude Code perfect memory with ShadowGit"
+description: "Add ShadowGit to Claude Code with one command"
 icon: "asterisk"
 ---
 
-## Prerequisites
+## Before you start
 
-- Claude Code installed ([Get Claude Code](https://claude.ai/download))
-- Node.js 18+ installed
-- ShadowGit desktop app running with tracked repositories
+You need Claude Code ([Get Claude Code](https://code.claude.com/docs)), the ShadowGit app, Node.js 20 or later and Git. See [Before you start](/installation#before-you-start).
 
-## Quick Setup
+## Set up
 
-Install and configure ShadowGit in one command:
+Run this in a terminal, not inside a Claude Code session:
 
 ```bash
-# Install MCP server globally
-npm install -g shadowgit-mcp-server
-
-# Add to Claude Code
-claude mcp add shadowgit -- shadowgit-mcp-server
-
-# Restart Claude Code
+claude mcp add --scope user shadowgit -- npx -y shadowgit-mcp-server
 ```
 
-That's it. Claude now has perfect memory of your code changes.
+`--scope user` makes ShadowGit available in all your projects. Then start a new Claude Code session.
 
-## Verify Installation
+## Check that it works
 
-Ask Claude:
-```
-Can you list my ShadowGit repositories?
-```
-
-Claude should respond with your tracked repositories. If not, see troubleshooting below.
-
-## What Claude can now do
-
-### AI Session Awareness
-ShadowGit now tracks your active coding sessions with Claude, automatically detecting when you're working together and preserving context across your development flow. This means Claude understands not just your code history, but also your current coding patterns and recent focus areas.
-
-### Debug recent changes
-```
-Claude, what changed in my auth.ts file in the last hour?
+```bash
+claude mcp list
 ```
 
-### Find when bugs appeared
-```
-Claude, when did the login function last work correctly?
+`shadowgit` should show `✔ Connected`. Inside a session, `/mcp` shows it with its tools. Then ask Claude:
+
+```text
+Show me my ShadowGit repositories
 ```
 
-### Understand code evolution
-```
-Claude, show me how the payment processing evolved this week
+Claude lists the projects ShadowGit tracks and which one you're working in.
+
+## Using it
+
+Claude Code tells ShadowGit which folder you started it in. When that folder is inside a tracked project, you don't need to name the project: ShadowGit uses that one. For what to ask, see [What to ask](/installation#what-to-ask).
+
+### Skip the permission prompts
+
+Claude Code may ask before it calls a ShadowGit tool. To allow all of them, add `mcp__shadowgit__*` to the `allow` list in `~/.claude/settings.json`:
+
+```json
+{
+  "permissions": {
+    "allow": ["mcp__shadowgit__*"]
+  }
+}
 ```
 
-### Compare implementations
-```
-Claude, what approach worked better - yesterday's or today's refactor?
-```
-
-## Example Commands
-
-Ask Claude in natural language and it will use the right git commands:
-
-**See recent commits:**
-```
-"Show me the last 20 commits in my-app"
-"What did I commit today?"
-```
-
-**Check what broke:**
-```
-"What changed between now and 10 commits ago?"
-"Show me the diff for the last hour"
-```
-
-**Find who changed a line:**
-```
-"Who last modified src/api.ts?"
-"Show me the blame for the authentication file"
-```
-
-**See file history:**
-```
-"Show me the history of Header.tsx"
-"What changes were made to the login component?"
-```
-
-## Session Management
-
-Control how ShadowGit tracks your work with Claude:
-
-**Start a session:**
-```
-"Start a ShadowGit session for this debugging task"
-```
-
-**Create checkpoints:**
-```
-"Create a ShadowGit checkpoint: Fixed authentication bug"
-```
-
-**End a session:**
-```
-"End the current ShadowGit session"
-```
-
-## Advanced Usage
-
-### Working with multiple repositories
-
-Claude can analyze across all your projects:
-
-```
-Claude, check if I've solved similar authentication issues in my other projects
-```
-
-### Time-based debugging
-
-```
-Claude, what was I working on yesterday between 2-4 PM?
-```
-
-### Pattern detection
-
-```
-Claude, do you see any patterns in when my tests fail?
-```
+You can also manage rules with the `/permissions` command.
 
 ## Troubleshooting
 
-### Claude doesn't see ShadowGit
+### ShadowGit shows "Failed to connect"
 
-1. **Restart Claude Code** after adding the MCP server
-2. **Check installation**:
+1. Run `claude mcp get shadowgit`. Its `Issue:` line says what went wrong.
+2. Check `node --version`: the server needs Node.js 20 or later, from the `PATH` Claude Code starts with.
+3. The first start downloads the server, and Claude Code waits 30 seconds for it. On a slow connection, download it once in a terminal, stop it with `Ctrl+C` when it sits waiting, then reconnect from `/mcp`:
    ```bash
-   # Verify MCP server is installed
-   npm list -g shadowgit-mcp-server
-   
-   # Test it works
-   shadowgit-mcp-server --version
+   npx -y shadowgit-mcp-server
+   ```
+4. On native Windows (not WSL), if it still fails, add ShadowGit through `cmd /c`, which older Claude Code versions needed:
+   ```bash
+   claude mcp remove shadowgit
+   claude mcp add --scope user shadowgit -- cmd /c npx -y shadowgit-mcp-server
    ```
 
-### "No repositories found"
+### Claude doesn't use ShadowGit
 
-1. Open ShadowGit desktop app
-2. Add at least one repository
-3. Wait for first snapshot (usually within 3 minutes)
-4. Ask Claude again
+Claude Code loads MCP servers when a session starts. Start a new session after adding ShadowGit, and check that `/mcp` lists it.
 
-### Permission errors
+### ShadowGit only works in one project
 
-On macOS, you might need to grant Terminal permissions:
-1. System Preferences → Security & Privacy
-2. Privacy tab → Full Disk Access
-3. Add Terminal or your terminal app
+You added it without `--scope user`, so it's only available in the folder where you ran the command. Add it again with the scope:
 
-### Claude can't execute git commands
-
-Make sure git is installed:
 ```bash
-git --version
+claude mcp remove shadowgit
+claude mcp add --scope user shadowgit -- npx -y shadowgit-mcp-server
 ```
 
-If not installed, [download Git](https://git-scm.com/downloads).
-
-## Best Practices
-
-### 1. Let ShadowGit run for a while
-The more history ShadowGit captures, the smarter Claude becomes. Let it run for at least a day before expecting deep insights.
-
-### 2. Be specific with time ranges
-Instead of "recent changes", say "changes in the last 2 hours" or "changes from yesterday".
-
-### 3. Use repository names
-Always specify which repository when you have multiple:
-```
-Claude, in my 'frontend' repo, what changed in the last hour?
-```
-
-### 4. Combine with file context
-Claude Code already reads your files. ShadowGit adds the history dimension:
-```
-Claude, looking at this error and my recent changes, what broke?
-```
-
-## Security
-
-- **Read-only**: Claude can only read history, never modify code
-- **Local only**: No code leaves your machine
-- **Safe commands**: Only non-destructive git commands allowed
-
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card
-    title="Installation Guide"
-    icon="download"
-    href="/installation"
-  >
-    General installation instructions
-  </Card>
-  <Card
-    title="Cursor Setup"
-    icon="code-simple"
-    href="/ai-tools/cursor"
-  >
-    Configure Cursor with ShadowGit
-  </Card>
-</CardGroup>
+For problems that aren't specific to Claude Code, such as "ShadowGit isn't running", see [Troubleshooting](/installation#troubleshooting).

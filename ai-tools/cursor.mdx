@@ -1,278 +1,51 @@
 ---
 title: "Cursor"
-description: "Configure Cursor to use ShadowGit for perfect AI memory"
+description: "Add ShadowGit to Cursor"
 icon: "code-simple"
 ---
 
-## Prerequisites
+## Before you start
 
-- Cursor installed ([Get Cursor](https://cursor.com))
-- Node.js 18+ installed
-- ShadowGit desktop app running with tracked repositories
+You need Cursor ([Get Cursor](https://cursor.com)), the ShadowGit app, Node.js 20 or later and Git. See [Before you start](/installation#before-you-start).
 
-## Quick Setup
+## Set up
 
-1. **Install the MCP server**:
-   ```bash
-   npm install -g shadowgit-mcp-server
-   ```
-
-2. **Open Cursor Settings**:
-   - Press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux)
-   - Search for `Cursor Settings` in the search bar
-   - Click on `Tools and Integrations`
-   - Under `MCP Tools`, click on `Add Custom MCP`
-
-3. **Add ShadowGit configuration**:
+1. Open `~/.cursor/mcp.json`, creating it if needed, and add ShadowGit under `mcpServers`:
    ```json
    {
      "mcpServers": {
        "shadowgit": {
-         "command": "shadowgit-mcp-server"
+         "command": "npx",
+         "args": ["-y", "shadowgit-mcp-server"]
        }
      }
    }
    ```
+   If the file already lists other servers, add the `shadowgit` entry next to them. To use ShadowGit in one project only, put the entry in `.cursor/mcp.json` inside that project instead.
+2. Save the file and restart Cursor.
 
-4. **Restart Cursor** to activate the MCP server
+## Check that it works
 
-## Verify Installation
+Open **Customize → MCPs** in Cursor's sidebar: `shadowgit` should be listed with its tools. Then ask the Agent:
 
-In Cursor's AI chat, type:
-```
-What ShadowGit repositories are available?
-```
-
-Cursor should list your tracked repositories. If not, see troubleshooting below.
-
-## What Cursor can now do
-
-### AI Session Intelligence
-ShadowGit automatically tracks your coding sessions with Cursor, detecting when you're actively developing and maintaining context throughout your work. This gives Cursor deeper awareness of your coding patterns, recent changes, and development focus - making its suggestions more relevant and accurate.
-
-### Instant debugging
-```
-Why is this function returning null? Check what changed in the last hour.
+```text
+Show me my ShadowGit repositories
 ```
 
-### Code archaeology
-```
-Find when this bug was introduced by checking the history of auth.ts
-```
+It lists the projects ShadowGit tracks.
 
-### Smart suggestions
-```
-Based on my recent changes, what's the best way to refactor this?
-```
+## Using it
 
-### Pattern recognition
-```
-Have I fixed similar issues before in this project?
-```
+The Agent uses ShadowGit's tools on its own when your question needs them. By default Cursor asks for your approval before it runs one; see [Cursor's MCP docs](https://cursor.com/docs/mcp) to change that.
 
-## Using ShadowGit in Cursor
-
-### In Chat (Cmd+K)
-
-You can ask Cursor to analyze your code history:
-
-```
-@shadowgit show me recent changes to the login flow
-```
-
-```
-@shadowgit when did the tests last pass?
-```
-
-```
-@shadowgit what files changed together with api.ts?
-```
-
-### In Composer (Cmd+I)
-
-When making larger changes, reference history:
-
-```
-Refactor this authentication flow. Check @shadowgit for what approaches 
-I've tried before and avoid the patterns that didn't work.
-```
-
-### During debugging
-
-Combine current code with history:
-
-```
-This error started appearing today. @shadowgit check what changed 
-in the last 24 hours that could cause this.
-```
-
-## Advanced Configuration
-
-### Custom installation path
-
-If npm installed to a non-standard location:
-
-```json
-{
-  "mcpServers": {
-    "shadowgit": {
-      "command": "/usr/local/bin/shadowgit-mcp-server"
-    }
-  }
-}
-```
-
-### With environment variables
-
-```json
-{
-  "mcpServers": {
-    "shadowgit": {
-      "command": "shadowgit-mcp-server",
-      "env": {
-        "NODE_ENV": "production"
-      }
-    }
-  }
-}
-```
-
-## Example Workflows
-
-### Morning debugging session
-
-1. **Check overnight changes**:
-   ```
-   @shadowgit what changed since yesterday evening?
-   ```
-
-2. **Find breaking changes**:
-   ```
-   @shadowgit when did the tests last pass? Show me the diff.
-   ```
-
-3. **Quick fix**:
-   ```
-   Based on @shadowgit history, revert just the breaking change
-   ```
-
-### Code review preparation
-
-```
-@shadowgit summarize all changes to the auth module this week
-```
-
-### Learning from history
-
-```
-@shadowgit show me all the different ways I've implemented this feature
-```
+When ShadowGit tracks more than one project, name the one you mean in your question, as in "What changed in webshop in the last hour?". For more, see [What to ask](/installation#what-to-ask).
 
 ## Troubleshooting
 
-### Cursor doesn't see ShadowGit
+### ShadowGit isn't listed or doesn't connect
 
-1. **Confirm installation**:
-   ```bash
-   which shadowgit-mcp-server
-   ```
+1. Check that `~/.cursor/mcp.json` is valid JSON and that you restarted Cursor after saving it.
+2. Open the Output panel (`Cmd+Shift+U` on macOS, `Ctrl+Shift+U` on Windows and Linux) and choose **MCP Logs**. Errors from the server show up there.
+3. Check `node --version`: the server needs Node.js 20 or later. If Cursor can't find `npx`, make sure Node.js is on the `PATH` Cursor starts with, then restart Cursor.
 
-2. **Check Cursor logs**:
-   - Help → Toggle Developer Tools
-   - Check Console for MCP errors
-
-3. **Restart Cursor completely**:
-   - Quit Cursor (Cmd+Q / Alt+F4)
-   - Start Cursor fresh
-
-### "Command not found"
-
-The MCP server isn't in PATH. Find it:
-```bash
-npm list -g shadowgit-mcp-server --depth=0
-```
-
-Use the full path in settings:
-```json
-"command": "/Users/you/.npm-global/bin/shadowgit-mcp-server"
-```
-
-### No repositories available
-
-1. ShadowGit desktop app must be running
-2. At least one repository must be tracked
-3. Wait 3-5 minutes for first snapshots
-
-### Permission denied
-
-Grant Cursor full disk access (macOS):
-1. System Preferences → Security & Privacy
-2. Privacy → Full Disk Access
-3. Add Cursor.app
-
-## Best Practices
-
-### 1. Context-aware queries
-Instead of generic "show history", be specific:
-```
-@shadowgit show auth.ts changes that happened during failing tests
-```
-
-### 2. Time-box investigations
-```
-@shadowgit only show changes from the last 2 hours
-```
-
-### 3. Cross-file analysis
-```
-@shadowgit what other files usually change when I modify config.json?
-```
-
-### 4. Learn from patterns
-```
-@shadowgit how did I solve similar React rendering issues before?
-```
-
-## Security
-
-- **Read-only access**: Can't modify your code or git history
-- **Local processing**: Your code never leaves your machine
-- **Safe operations**: Only non-destructive git commands allowed
-
-## Tips & Tricks
-
-### Quick history check
-Create a Cursor shortcut for common queries:
-- Settings → Keyboard Shortcuts
-- Search for "AI Chat"
-- Add custom binding for "@shadowgit log -10"
-
-### Combine with Cursor's context
-```
-Looking at @file:src/api.ts and @shadowgit history, 
-why might this endpoint be failing?
-```
-
-### Use for documentation
-```
-@shadowgit help me write docs by showing how this API evolved
-```
-
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card
-    title="Installation Guide"
-    icon="download"
-    href="/installation"
-  >
-    General setup instructions
-  </Card>
-  <Card
-    title="Claude Code Setup"
-    icon="asterisk"
-    href="/ai-tools/claude-code"
-  >
-    Configure Claude Code with ShadowGit
-  </Card>
-</CardGroup>
+For problems that aren't specific to Cursor, such as "ShadowGit isn't running", see [Troubleshooting](/installation#troubleshooting).

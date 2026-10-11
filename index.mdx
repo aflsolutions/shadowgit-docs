@@ -1,115 +1,104 @@
 ---
 title: "Introduction"
-description: "Give your AI perfect memory of your code changes"
+description: "ShadowGit snapshots your projects as you work and lets your AI assistant read that history"
 ---
 
 ## What is ShadowGit?
 
-ShadowGit saves every keystroke you type and feeds your complete code history to AI assistants like Claude and Cursor via MCP (Model Context Protocol).
+ShadowGit is a desktop app that snapshots your projects every few minutes while you work, in a history of its own next to your git repository. Through the ShadowGit MCP server, Claude Code, Cursor and Claude Desktop can read that history: what changed in the last hour, when a file was last touched, what you tried yesterday.
 
-Your AI stops guessing. It knows exactly what worked before.
+Your assistant stops guessing what changed. It looks.
 
 <Card
-  title="Quick Installation"
+  title="Install in 2 minutes"
   icon="rocket"
   href="/installation"
   horizontal
 >
-  Get up and running in 2 minutes with our MCP server.
+  One command for Claude Code, one config entry for Cursor or Claude Desktop.
 </Card>
 
 ## How it works
 
-ShadowGit runs quietly in the background, creating a parallel git repository (`.shadowgit.git`) that captures every save as a commit. The MCP server then gives your AI read-only access to this detailed history.
+ShadowGit keeps each project's snapshots in a separate git repository, `.shadowgit.git`, inside the project. It never touches your own `.git`, and it adds `.shadowgit.git` to your `.gitignore`.
 
-**New: AI Session Management** - ShadowGit automatically detects when you're working with AI tools and tracks your coding sessions, giving your AI assistant better context about your development patterns and recent changes.
-
-```
+```text
 your-project/
-├── .git/              # Your normal git repo
-├── .shadowgit.git/    # Automatic snapshot history (AI reads this)
+├── .git/              # Your own git history, untouched
+├── .shadowgit.git/    # ShadowGit's snapshots
 ├── src/
 └── ...
 ```
 
-## Why ShadowGit exists
+- **Snapshots.** ShadowGit takes the first snapshot when you add a project, then a new one every few minutes while files change, sooner after a large change. You can tune the timing in the app's settings.
+- **Sessions and checkpoints.** Before your assistant edits several files, it can start a ShadowGit session, which pauses automatic snapshots so its half-done edits don't spread over many snapshots. When it's done, it saves the result as one named checkpoint and ends the session. See [Sessions and checkpoints](/installation#sessions-and-checkpoints).
+- **Restore.** In the app you can bring a project back to any snapshot. Changes not yet in a snapshot are backed up first.
+
+## Why use it
 
 <Columns cols={3}>
   <Card
-    title="Fewer debug attempts"
+    title="Answers from history"
     icon="clock"
   >
-    AI finds issues using history, not guessing. Fewer attempts to fix bugs.
+    Your assistant runs `git log` and `git diff` on the snapshots to see what changed, instead of guessing from today's code.
   </Card>
   <Card
-    title="Git commands not context dumps"
+    title="Diffs, not whole files"
     icon="crosshairs"
   >
-    AI runs git diff instead of reading entire files. Saves thousands of tokens.
+    It reads only what changed, which keeps its context small.
   </Card>
   <Card
-    title="Zero lost code"
+    title="Nothing lost"
     icon="brain"
   >
-    Every change saved automatically. One-click restore from any moment.
+    Work you never committed is in a snapshot, unless `.shadowgit-ignore` leaves it out, and you can restore any snapshot.
   </Card>
 </Columns>
-
-## Real-world impact
-
-- **Before**: Spend 15 minutes re-explaining your codebase to Claude
-- **After**: Claude fixes the bug in 5 minutes using your code history
-
-That's not marketing. That's math.
 
 ## Get started
 
 <Columns cols={2}>
   <Card
-    title="Install MCP Server"
+    title="Installation"
     icon="download"
     href="/installation"
   >
-    Set up the MCP server for Claude and Cursor in 2 minutes.
+    Requirements, setup and what to ask.
   </Card>
   <Card
-    title="Claude Code Setup"
+    title="Claude Code"
     icon="asterisk"
     href="/ai-tools/claude-code"
   >
-    Configure Claude Code to use ShadowGit.
+    Add ShadowGit to Claude Code with one command.
   </Card>
   <Card
-    title="Cursor Setup"
+    title="Cursor"
     icon="code-simple"
     href="/ai-tools/cursor"
   >
-    Add ShadowGit to Cursor for perfect AI memory.
-  </Card>
-  <Card
-    title="GitHub Repository"
-    icon="github"
-    href="https://github.com/blade47/shadowgit-mcp"
-  >
-    View source, report issues, or contribute to the MCP server.
+    Add ShadowGit to Cursor.
   </Card>
   <Card
     title="Download ShadowGit"
     icon="desktop"
     href="https://shadowgit.com"
   >
-    Get the desktop app that captures your code changes.
+    Get the desktop app that takes the snapshots.
   </Card>
 </Columns>
 
-## Security & Privacy
+## Privacy and security
 
-- **100% local**: Your code never leaves your machine
-- **Read-only access**: AI can only read, never modify
-- **No cloud uploads**: Everything stays on your computer
+- **Your code stays on your computer.** Snapshots are stored in your project, and ShadowGit doesn't upload them.
+- **The MCP server only talks to the ShadowGit app on your computer.** What your assistant reads through it goes to your AI provider, like any file the assistant opens.
+- **Through ShadowGit, your assistant reads and adds checkpoints, nothing else.** It reads the snapshot history with read-only git commands and can add checkpoints to it. Through ShadowGit it can't change your files, your own git repository or existing snapshots.
 
 ## Requirements
 
-- Node.js 18 or higher
-- ShadowGit desktop app (Mac, Windows, or Linux)
-- An AI tool (Claude Code, Cursor, etc.)
+- The ShadowGit app on macOS 13 or later, Windows 10 or later (64-bit) or Linux (x64 or arm64). Checkpoints need version 0.3.4 or later.
+- Git
+- Node.js 20 or later, which runs the MCP server
+- Claude Code, Cursor, Claude Desktop or another MCP client
