@@ -5,7 +5,7 @@ description: "Connect ShadowGit to Claude Code, Cursor or Claude Desktop in 2 mi
 
 ## Before you start
 
-1. **The ShadowGit app**, running and tracking at least one project ([Download ShadowGit](https://shadowgit.com)). Checkpoints need version 0.3.4 or later. To track a project, click **Add repository** in the app and pick its folder.
+1. **The ShadowGit app**, running and tracking at least one project ([Download ShadowGit](https://shadowgit.com)). Checkpoints need version 0.3.4 or later; the Lens needs a version newer than 0.3.5. To track a project, click **Add repository** in the app and pick its folder.
 2. **Node.js 20 or later** ([Download Node.js](https://nodejs.org)). Check with `node --version`.
 3. **Git** ([Download Git](https://git-scm.com/downloads)). Check with `git --version`.
 
@@ -126,6 +126,18 @@ Your assistant may do this by itself when it's about to edit several files. The 
 
 Sessions and checkpoints need the ShadowGit app running. Reading history works while it's closed.
 
+### The Lens in your assistant's words
+
+ShadowGit's Lens shows a range of snapshots as numbered steps beside a map of the code they touch. On its own, ShadowGit writes the Lens's text from the code. Your assistant, which made the change, can write it instead. At the end of a session, ask:
+
+```text
+Write the Lens words for this session
+```
+
+Your assistant reads the session's Lens, then writes a summary, a title and a sentence or two for each step, and the role each component plays. In the Lens, pick **This AI session** to read them. ShadowGit keeps the words in its history: a component's role still shows in later ranges while its code is unchanged.
+
+This needs the ShadowGit app running, in a version newer than 0.3.5.
+
 ## Troubleshooting
 
 ### "ShadowGit isn't running"
@@ -143,6 +155,10 @@ Your assistant was started in a folder ShadowGit doesn't track, and ShadowGit tr
 ### "This version of ShadowGit can't create checkpoints"
 
 Update the ShadowGit app to 0.3.4 or later from [shadowgit.com](https://shadowgit.com).
+
+### "This version of ShadowGit has no Lens for AI assistants"
+
+Update the ShadowGit app from [shadowgit.com](https://shadowgit.com).
 
 ### Your assistant doesn't see ShadowGit
 
