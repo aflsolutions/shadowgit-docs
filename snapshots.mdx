@@ -1,0 +1,82 @@
+---
+title: "Snapshots and restore"
+description: "How ShadowGit records your projects, and how to read and restore a snapshot"
+icon: "clock-rotate-left"
+---
+
+## Add a project
+
+Click **+** next to **Repositories** in the sidebar, or **Add a repository** when you have none yet, and pick the project's folder. ShadowGit then:
+
+- creates `.shadowgit.git` in the folder, which holds the snapshots, and adds it to the project's `.gitignore`;
+- creates `.shadowgit-ignore`, listing what to leave out (see [Leave files out](#leave-files-out));
+- takes the first snapshot, "🎯 Initial ShadowGit Snapshot".
+
+Your own `.git` stays as it is.
+
+## When ShadowGit takes a snapshot
+
+Every 5 seconds ShadowGit looks for changed files. A change of 25 lines or more is saved at the next look. Smaller changes wait until at least 3 minutes have passed since the last snapshot, so a run of small edits lands in one snapshot. You can change these numbers in **Settings**, under **Monitoring** and **Commits**.
+
+To save a snapshot right away, click **Create checkpoint** at the top right. While an assistant's [session](/installation#sessions-and-checkpoints) is running, automatic snapshots pause for that project, and the assistant saves its work as one checkpoint at the end.
+
+## Read a snapshot
+
+<Frame caption="Changes: the snapshots on the left, the selected one's diff on the right">
+  <img src="/images/changes.png" alt="The Changes view: a list of two snapshots, a file tree and a unified diff of the selected snapshot" />
+</Frame>
+
+Select a project: **Changes** lists its snapshots, newest first, with their title, who saved them and when, in your local time. Click one to see what it changed since the snapshot before it.
+
+- **Unified** and **Split** switch between one column and two.
+- The file count above the diff, like **10 files**, shows the file tree. So does `]`.
+- `J` and `K` move to the next and previous file, and `[` folds the sidebar.
+- Lockfiles, minified files and very long diffs start folded. Click a file's name to fold or unfold it.
+- **Tags** adds tags and a note to a snapshot, so you can find it again.
+
+To see what several snapshots changed together, pick a range in the [Lens](/lens) or the [Map](/map).
+
+The snapshot titles say where a snapshot came from:
+
+| Title | Saved by |
+|---|---|
+| ShadowGit Auto-Snapshot | ShadowGit, as you work |
+| ✋ Manual Checkpoint | You, with **Create checkpoint** |
+| Your assistant's message, like "Fixed auth bug" | Your assistant, at the end of a session |
+| 🔒 Pre-restore backup, 📌 Post-restore snapshot | A restore (see below) |
+
+## Restore a snapshot
+
+Select the snapshot, click **Restore**, then **Restore commit**. ShadowGit:
+
+1. saves changes not yet in a snapshot as "🔒 Pre-restore backup", leaving out the files in `.shadowgit-ignore`;
+2. writes your files back as they were in that snapshot;
+3. records the result as "📌 Post-restore snapshot".
+
+Restore writes back the files the snapshot holds. Files you created after it stay in your folder, so delete them yourself if you want them gone. To undo a restore, restore the "🔒 Pre-restore backup" snapshot.
+
+Restore changes the files in your folder, never your own git history.
+
+## Leave files out
+
+`.shadowgit-ignore`, in the project's folder, lists what ShadowGit leaves out of its snapshots: dependency folders like `node_modules`, build output, logs, lockfiles, editor and system files. Edit it to leave out more, one pattern per line:
+
+```text
+# a folder and everything in it
+coverage/**
+# every file with this extension
+*.sqlite
+```
+
+`*` matches within one folder, `**` across folders and `?` one character. New snapshots follow the file. The ones already taken keep what they hold.
+
+## Remove a project
+
+Point at the project in the sidebar, click the trash icon, then **Remove repository**. ShadowGit stops watching it and deletes:
+
+- the `.shadowgit.git` folder, with every snapshot;
+- the `.shadowgit-ignore` file;
+- the `.shadowgit.git` line in `.gitignore`;
+- the project's [map](/map).
+
+Your files and your own git history stay as they are.

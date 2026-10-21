@@ -1,0 +1,73 @@
+---
+title: "The Lens"
+description: "Read a range of snapshots as numbered steps beside a canvas of the code they touch"
+icon: "glasses"
+---
+
+The Lens shows what a range of snapshots does to your code before you read the diff. Each numbered step names the functions, classes and types it adds, changes or removes, and a canvas beside the steps draws those pieces and how they call each other.
+
+<Frame caption="The Lens of an AI session, in the words of the assistant that made the change">
+  <img src="/images/lens.png" alt="The Lens: a summary and one numbered step on the left, a canvas of new and changed functions on the right" />
+</Frame>
+
+## Open the Lens
+
+Select a project and click **Lens**, next to **Changes** and **Map** at the top right. It's there once the project has a snapshot. The sidebar folds to icons while you read; **Changes** brings it back.
+
+The Lens needs ShadowGit 0.3.6 or later.
+
+## Pick a range
+
+The **Range** menu, at the top left, picks which snapshots the Lens reads:
+
+| Range | What it covers |
+|---|---|
+| **Since last checkpoint** | From the newest snapshot back to your last checkpoint. The Lens opens on this one. |
+| **This AI session** | Your assistant's latest session. It appears once the project has had one. |
+| **Today** | Everything since midnight, in your local time. |
+
+For a range of your own, shift-click two snapshots in the list below the menu. A plain click on a snapshot opens it in **Changes**.
+
+New snapshots don't redraw what you're reading. When they arrive, **Newer snapshots: update** appears at the top. Click it to move the range up to the newest snapshot.
+
+## Read it
+
+- **The top** names the range and counts its snapshots, files, added and removed lines and changes. Below the counts are a summary and the checkpoints in the range, with their messages.
+- **Each step** says what it adds, changes or removes, in order. Its names link to their cards on the canvas. **Also in this step** lists the other pieces it touches, and a line like "Reaches 14 symbols in 5 files" says how much code depends on it. **Show code** opens the step's code.
+- **The canvas** draws a card for each function, class or type, marked **New**, **Changed** or **Removed**, with arrows for the calls between them. Layers run as captions across the top.
+
+Scroll the steps and the canvas follows. Click a card to open its step, or press `J` and `K` to move to the next and previous step. **Where it lands**, in the canvas's corner, opens the [Map](/map) with this range lit on your whole project.
+
+## Words from your assistant
+
+ShadowGit writes the steps from the code on its own. The assistant that made the change can write them instead: a summary, a title and a sentence or two for each step, and the role each piece plays. At the end of a session, ask it:
+
+```text
+Write the Lens words for this session
+```
+
+The Lens then shows "Words by Claude Code · every name checked against the code graph" (or your assistant's name), and picks up the words within a few seconds, without a reload. Under **The author says**, a step can quote the checkpoint message behind it. A step your assistant didn't word says "From the code alone". This needs the [ShadowGit MCP server](/installation) set up in your assistant.
+
+The words belong to that range. A piece's role also shows in later ranges while its code is unchanged. ShadowGit keeps the words in the project's `.shadowgit.git`, on your computer.
+
+## What the Lens reads
+
+The Lens reads code in TypeScript, JavaScript, Python, Java, C, C++, C#, Go, Rust, Kotlin, PHP, Ruby and Swift. Other files, such as docs, config and images, show in **Changes** but not in the Lens. A range that changes only those says "Nothing in this range changes code", with **Show the changes** to open them.
+
+Limits:
+
+- A snapshot of more than 20,000 files or 64 MB of source code is too large to draw, and so is a range whose two ends together pass that.
+- Source files over 512,000 characters are skipped.
+- A step shows the code of up to 12 files. Open the rest in **Changes**.
+
+## Troubleshooting
+
+When the Lens can't draw a range, it says "Couldn't draw this range" and why.
+
+### "This snapshot has too many files for the code graph" or "This snapshot is too large for the code graph"
+
+The project's snapshots hold more than 20,000 files or 64 MB of source. Generated code and copied-in dependencies are the usual cause. Add their folders to `.shadowgit-ignore` (see [Leave files out](/snapshots#leave-files-out)), and the next snapshots leave them out.
+
+### "Drawing the Lens took longer than 120 s"
+
+Pick a smaller range, with fewer snapshots or fewer changed files.
