@@ -5,7 +5,7 @@ description: "Connect ShadowGit to Claude Code, Cursor or Claude Desktop in 2 mi
 
 ## Before you start
 
-1. **The ShadowGit app**, running and tracking at least one project ([Download ShadowGit](https://shadowgit.com)). Checkpoints need version 0.3.4 or later; the Lens needs a version newer than 0.3.5. To track a project, click **Add repository** in the app and pick its folder.
+1. **The ShadowGit app**, running and tracking at least one project ([Download ShadowGit](https://shadowgit.com)). Checkpoints need version 0.3.4 or later, and the Lens 0.3.6 or later. Versions before 0.3.3 can't update themselves: [download the latest](https://shadowgit.com) once. To track a project, click **Add repository** in the app and pick its folder.
 2. **Node.js 20 or later** ([Download Node.js](https://nodejs.org)). Check with `node --version`.
 3. **Git** ([Download Git](https://git-scm.com/downloads)). Check with `git --version`.
 
@@ -122,13 +122,13 @@ A session keeps an assistant's edits together. Before a change that touches seve
   </Step>
 </Steps>
 
-Your assistant may do this by itself when it's about to edit several files. The ShadowGit app shows active AI sessions in its sidebar, and ends a forgotten session on its own one to two hours after it started.
+Your assistant may do this by itself when it's about to edit several files. The ShadowGit app shows active AI sessions in its sidebar, and ends a forgotten session on its own an hour to an hour and a half after it started.
 
 Sessions and checkpoints need the ShadowGit app running. Reading history works while it's closed.
 
 ### The Lens in your assistant's words
 
-ShadowGit's Lens shows a range of snapshots as numbered steps beside a map of the code they touch. On its own, ShadowGit writes the Lens's text from the code. Your assistant, which made the change, can write it instead. At the end of a session, ask:
+ShadowGit's [Lens](/lens) shows a range of snapshots as numbered steps beside a canvas of the code they touch. On its own, ShadowGit writes the Lens's text from the code. Your assistant, which made the change, can write it instead. At the end of a session, ask:
 
 ```text
 Write the Lens words for this session
@@ -136,7 +136,7 @@ Write the Lens words for this session
 
 Your assistant reads the session's Lens, then writes a summary, a title and a sentence or two for each step, and the role each component plays. In the Lens, pick **This AI session** to read them. ShadowGit keeps the words in its history: a component's role still shows in later ranges while its code is unchanged.
 
-This needs the ShadowGit app running, in a version newer than 0.3.5.
+This needs the ShadowGit app running, in version 0.3.6 or later.
 
 ## Troubleshooting
 
@@ -226,8 +226,8 @@ ShadowGit comes as a `.deb`, an `.rpm` and an AppImage, for x64 and arm64. Downl
 |---|---|
 | Snapshots | `.shadowgit.git` inside each project |
 | Files left out of snapshots | `.shadowgit-ignore` inside each project |
-| Project list and settings | macOS: `~/.shadowgit`<br />Windows: `%LOCALAPPDATA%\shadowgit`<br />Linux: `~/.local/share/shadowgit` |
+| Project list, settings and maps | macOS: `~/.shadowgit`<br />Windows: `%LOCALAPPDATA%\shadowgit`<br />Linux: `~/.local/share/shadowgit` |
 
-ShadowGit creates `.shadowgit-ignore` with common dependency and build folders when you add a project. Edit it to leave out more.
+ShadowGit creates `.shadowgit-ignore` with common dependency and build folders when you add a project. To leave out more, see [Leave files out](/snapshots#leave-files-out).
 
 For the MCP server's own settings, see its [README on GitHub](https://github.com/aflsolutions/shadowgit-mcp#configuration).

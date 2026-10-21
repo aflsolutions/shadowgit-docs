@@ -1,0 +1,56 @@
+---
+title: "Settings, updates and privacy"
+description: "Recording in the background, updates, your license, and what ShadowGit sends"
+icon: "gear"
+---
+
+## Recording in the background
+
+Closing ShadowGit's window doesn't stop it. It keeps taking snapshots, with its icon in the tray, or the menu bar on a Mac. The icon's menu has **Open ShadowGit**, **Pause monitoring**, **Open at login** and **Quit ShadowGit**. The icon turns grey while monitoring is paused, and shows an amber dot when ShadowGit can't record a project.
+
+To start ShadowGit when you log in, turn on **Open at login**, in the tray menu or in **Settings**, under **In the background**.
+
+## Settings
+
+Open **Settings** at the bottom of the sidebar. Change what you need, then click **Save changes**.
+
+| Section | What it sets |
+|---|---|
+| **Monitoring** | Whether ShadowGit watches your projects, and how often it looks for changes |
+| **Commits** | How long small changes wait, and how large a change is saved at once (see [When ShadowGit takes a snapshot](/snapshots#when-shadowgit-takes-a-snapshot)) |
+| **AI sessions** | Whether ShadowGit spots bursts of AI edits on its own, and titles their snapshots "🤖 AI-Assisted Changes" |
+| **Usage data** | Whether ShadowGit sends usage data (see [Privacy](#privacy)) |
+| **In the background** | **Open at login**, and **Quit ShadowGit** |
+| **Integrations** | Whether the Session API, which the MCP server talks to, is online |
+| **Appearance** | **Light**, **Dark** or **System** |
+
+## Updates
+
+ShadowGit updates itself. It checks shortly after it starts and every 4 hours, and downloads a new version in the background. When it's ready, a notice offers **Restart**. Otherwise the update installs the next time you quit ShadowGit. On Linux, the `.deb` and `.rpm` install only when you click **Restart**, because they ask for your password.
+
+To check now, click the arrows beside the version number at the bottom of the sidebar.
+
+When an update can't install, the sidebar says why:
+
+- "Move ShadowGit to Applications to get updates." on a Mac running ShadowGit from the disk image or Downloads.
+- "This build can't update itself. Install ShadowGit with the Windows installer." for the Windows zip.
+
+### Updating from a version before 0.3.3
+
+ShadowGit 0.3.2 and earlier can't update themselves. Download the latest version from [shadowgit.com](https://shadowgit.com) once, and it updates itself from then on.
+
+On Windows, the installer may show "Windows protected your PC". Click **More info**, then **Run anyway**.
+
+## Your license
+
+The first time you open ShadowGit, enter the license key from your purchase email and click **Activate**. ShadowGit checks the license once a day and keeps working offline for up to 7 days.
+
+## Privacy
+
+Your code, your snapshots, the Lens's words and the Map stay on your computer. ShadowGit sends three things:
+
+- **Usage data.** Which features you use and what fails, with your license email, ShadowGit's version and your operating system. Never code, file names or paths. To stop it, turn off **Share usage data** in **Settings**, under **Usage data**, and click **Save changes**.
+- **Error reports.** When something fails in the app, ShadowGit reports the error so we can fix it. A report can include the path of the folder or file involved. The **Share usage data** switch doesn't turn these off.
+- **License checks.** Your license key, to confirm it's valid.
+
+What your AI assistant reads through the [MCP server](/installation) goes to your AI provider, like any file the assistant opens.

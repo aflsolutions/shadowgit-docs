@@ -1,0 +1,65 @@
+---
+title: "The Map"
+description: "Your whole project on one canvas, kept current as snapshots land, with a change lit where it lands"
+icon: "map"
+---
+
+The Map draws your whole project from its newest snapshot. Each folder is an area, each function, class and type is a dot, and lines show the calls and imports between them. It keeps up with your snapshots, and it lights the range you pick, so you see where a change lands in the rest of your code.
+
+<Frame caption="The Map of the ShadowGit MCP server, with an AI session lit: new code in green, changed code in orange">
+  <img src="/images/map.png" alt="The Map: areas drawn as circles of dots, two of them outlined in orange, beside a card titled Where it lands" />
+</Frame>
+
+## Open the Map
+
+Select a project and click **Map**, next to **Changes** and **Lens** at the top right. The first time, ShadowGit draws the map of the newest snapshot ("Drawing the map…"). After that, the Map opens straight away on the map ShadowGit kept, and catches up from there.
+
+The Map needs ShadowGit 0.3.9 or later.
+
+## Read it
+
+Three buttons arrange the map:
+
+- **Areas**, the default, groups the code by folder.
+- **Layers** groups it by where the code runs, or else by package or folder.
+- **Change**, there while a range is lit, sets the changed code apart from the code that depends on it and from the rest of the project.
+
+The card at the left names the project and the snapshot the map is drawn from, counts its symbols, areas, calls and processes, and lists its largest areas. Type in **Find a symbol or area** to find one on the map. Test files, and folders such as `fixtures` and `e2e`, stay off the map.
+
+## Keeping up with your snapshots
+
+When new snapshots land, **Newer snapshots: update** appears at the top. Clicking it draws the newest snapshot and moves the lit range up to it.
+
+In a small project, where drawing the map takes under 3 seconds, the map redraws itself after each new snapshot while ShadowGit's window is open. Only the lit range waits for the click.
+
+## Where a change lands
+
+The Map lights the range picked in the **Range** menu on its left, the same range as the [Lens](/lens#pick-a-range). Pick **This AI session**, for example, or shift-click two snapshots. From the Lens, **Where it lands** opens the Map with its range lit.
+
+The card's title becomes **Where it lands**. It counts the new and changed pieces and lists the areas the change lands in. Under **Reaches**, it names the code outside the change that depends on code it altered.
+
+| Dot | Means |
+|---|---|
+| Green | **New** |
+| Orange | **Changed** |
+| Orange ring | **Same code, runs elsewhere** or **Same code, exported differently** |
+| Grey ring | **Comments only** or **Spacing only** |
+| Red ring | **Removed** |
+
+An area with a code change is outlined in orange, and one whose changes are only comments or spacing in grey. So a range that only rewords comments looks different at a glance from one that changes what the code does.
+
+<Frame caption="Change sets the new and changed code apart from what depends on it">
+  <img src="/images/map-change.png" alt="The Map arranged by Change: new code at the top, changed code at the bottom right, code that depends on it at the bottom left, the rest of the project in the middle" />
+</Frame>
+
+A range that changes no code says "Nothing in this range changes code: the map shows the whole project."
+
+## Where the map is kept
+
+ShadowGit draws the map on your computer and keeps it in its data folder (see [Where ShadowGit keeps its data](/installation#where-shadowgit-keeps-its-data)), under `maps`. It holds the names of your functions, classes and types and the paths of their files, and nothing of it is uploaded. Removing a project deletes its map.
+
+## Troubleshooting
+
+When the Map can't draw, it says "Couldn't draw the map" and why. It has the Lens's limits. A snapshot of more than 20,000 files or 64 MB of source code is too large, and drawing stops after 120 seconds. Leaving generated code and copied-in dependencies out with `.shadowgit-ignore` usually brings a project under them (see [Leave files out](/snapshots#leave-files-out)).
+
+If lighting a range fails, the Map says "Couldn't light this range" and why.

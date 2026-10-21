@@ -25,6 +25,15 @@
             ]
           },
           {
+            "group": "Using ShadowGit",
+            "pages": [
+              "snapshots",
+              "lens",
+              "map",
+              "settings"
+            ]
+          },
+          {
             "group": "AI tools",
             "pages": [
               "ai-tools/cursor",
