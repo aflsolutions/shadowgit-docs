@@ -40,6 +40,7 @@ your-project/
 
 - **Snapshots.** ShadowGit takes the first snapshot when you add a project, then a new one every few minutes while files change, sooner after a large change. You can tune the timing in the app's settings.
 - **Sessions and checkpoints.** Before your assistant edits several files, it can start a ShadowGit session, which pauses automatic snapshots so its half-done edits don't spread over many snapshots. When it's done, it saves the result as one named checkpoint and ends the session. See [Sessions and checkpoints](/installation#sessions-and-checkpoints).
+- **The map, for your assistant.** Before your assistant changes code, it reads ShadowGit's map: which area the code is in and what depends on it. See [Your project's architecture](/installation#architecture).
 - **Restore.** In the app you can bring a project back to any snapshot. Changes not yet in a snapshot are backed up first. See [Snapshots and restore](/snapshots).
 
 ## Why use it
@@ -116,11 +117,11 @@ your-project/
 
 - **Your code stays on your computer.** Snapshots are stored in your project, the Lens and the Map are drawn on your computer, and ShadowGit doesn't upload any of them. It does send usage data, which you can turn off, plus error reports and license checks. See [Privacy](/settings#privacy).
 - **The MCP server only talks to the ShadowGit app on your computer.** What your assistant reads through it goes to your AI provider, like any file the assistant opens.
-- **Through ShadowGit, your assistant reads and adds checkpoints, nothing else.** It reads the snapshot history with read-only git commands and can add checkpoints to it. Through ShadowGit it can't change your files, your own git repository or existing snapshots.
+- **Through ShadowGit, your assistant reads, and adds checkpoints and Lens words, nothing else.** It reads the snapshot history with read-only git commands, and the Map and the Lens. Through ShadowGit it can't change your files, your own git repository or existing snapshots.
 
 ## Requirements
 
-- The ShadowGit app on macOS 13 or later, Windows 10 or later (64-bit) or Linux (x64 or arm64). Checkpoints need version 0.3.4 or later, the Lens 0.3.6 and the Map 0.3.9.
+- The ShadowGit app on macOS 13 or later, Windows 10 or later (64-bit) or Linux (x64 or arm64). Checkpoints need version 0.3.4 or later, the Lens 0.3.6, the Map 0.3.9, and the map for your assistant 0.3.10.
 - Git
 - Node.js 20 or later, which runs the MCP server
 - Claude Code, Cursor, Claude Desktop or another MCP client
