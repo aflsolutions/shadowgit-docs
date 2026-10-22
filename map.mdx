@@ -54,9 +54,15 @@ An area with a code change is outlined in orange, and one whose changes are only
 
 A range that changes no code says "Nothing in this range changes code: the map shows the whole project."
 
+## Your assistant reads it too
+
+Through the [ShadowGit MCP server](/installation), your AI assistant reads the same map: how the project is organised, and what depends on the code it's about to change. It looks before it edits, on its own, and you can ask it too (see [Your project's architecture](/installation#architecture)). Its answers come from the map you see here, and say how many snapshots behind the newest it is.
+
+This needs ShadowGit 0.3.10 or later.
+
 ## Where the map is kept
 
-ShadowGit draws the map on your computer and keeps it in its data folder (see [Where ShadowGit keeps its data](/installation#where-shadowgit-keeps-its-data)), under `maps`. It holds the names of your functions, classes and types and the paths of their files, and nothing of it is uploaded. Removing a project deletes its map.
+ShadowGit draws the map on your computer and keeps it in its data folder (see [Where ShadowGit keeps its data](/installation#where-shadowgit-keeps-its-data)), under `maps`. It holds the names of your functions, classes and types and the paths of their files, and ShadowGit uploads none of it. What your assistant reads from it goes to your AI provider, like any file the assistant opens. Removing a project deletes its map.
 
 ## Troubleshooting
 
