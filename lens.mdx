@@ -32,11 +32,28 @@ New snapshots don't redraw what you're reading. When they arrive, **Newer snapsh
 
 ## Read it
 
-- **The top** names the range and counts its snapshots, files, added and removed lines and changes. Below the counts are a summary and the checkpoints in the range, with their messages.
+- **The top** names the range and counts its snapshots, files, added and removed lines and changes. Below the counts are a summary and the checkpoints in the range, with their messages, then the range's [dependencies](#dependencies).
 - **Each step** says what it adds, changes or removes, in order. Its names link to their cards on the canvas. **Also in this step** lists the other pieces it touches, and a line like "Reaches 14 symbols in 5 files" says how much code depends on it. **Show code** opens the step's code.
 - **The canvas** draws a card for each function, class or type, marked **New**, **Changed** or **Removed**, with arrows for the calls between them. Layers run as captions across the top.
 
 Scroll the steps and the canvas follows. Click a card to open its step, or press `J` and `K` to move to the next and previous step. **Where it lands**, in the canvas's corner, opens the [Map](/map) with this range lit on your whole project.
+
+## Dependencies
+
+Under the summary, **Dependencies** says what the range makes depend on what, between your project's areas (the folders the [Map](/map) draws) and its layers:
+
+| Line | Means |
+|---|---|
+| jobs depends on api for the first time | Code in jobs imports code in api, and none did before. |
+| billing no longer depends on jobs | The last import from billing into jobs is gone. |
+| api and billing now depend on each other | Each imports the other, and they didn't both before. |
+| api → billing: 3 → 5 links | A dependency that was already there grew or shrank. |
+
+Click a line for the links behind it, such as "retryFailedCharges (src/jobs/retry.ts:5) calls route (src/api/router.ts:4)". **step 2** beside it opens the step that holds it, and that step names the dependency too.
+
+An import makes a dependency, followed through files that only pass names on. Imports of types count, as "imports types from". Calls, `extends` and `implements` between the two areas count with it, but a call alone, with no import behind it, never makes a line. Test files aren't counted. Layers count when they're where your code runs, such as main and renderer, or packages. The lines say what changed. Whether a dependency belongs there is yours to judge.
+
+The Lens lists up to 12 lines, and says how many more there are. Dependencies need ShadowGit 0.3.11 or later.
 
 ## Words from your assistant
 
