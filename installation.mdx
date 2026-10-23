@@ -152,6 +152,8 @@ Write the Lens words for this session
 
 Your assistant reads the session's Lens, then writes a summary, a title and a sentence or two for each step, and the role each component plays. In the Lens, pick **This AI session** to read them. ShadowGit keeps the words in its history: a component's role still shows in later ranges while its code is unchanged.
 
+Your assistant also reads the session's [dependencies](/lens#dependencies), such as "jobs depends on api for the first time", so its words can say why one appeared. This needs ShadowGit 0.3.11 or later and version 2.4.0 or later of the MCP server.
+
 This needs the ShadowGit app running, in version 0.3.6 or later.
 
 ## Troubleshooting
@@ -179,6 +181,10 @@ Update the ShadowGit app from [shadowgit.com](https://shadowgit.com).
 ### "This version of ShadowGit has no map for AI assistants"
 
 Update the ShadowGit app to 0.3.10 or later from [shadowgit.com](https://shadowgit.com).
+
+### "ShadowGit answered with a … this version of shadowgit-mcp-server does not read"
+
+The ShadowGit app is newer than the MCP server your assistant runs. Quit your AI tool and open it again, so it starts the newest server. If the message comes back, set ShadowGit up again for your tool with `shadowgit-mcp-server@latest` in place of `shadowgit-mcp-server`.
 
 ### Your assistant doesn't see ShadowGit
 
