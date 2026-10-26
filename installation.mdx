@@ -108,6 +108,8 @@ Your assistant reads ShadowGit's [Map](/map) of the project: its areas and layer
 
 The map counts the calls and imports it can follow in the code. It leaves out test files, and code put together while the program runs, such as an import whose path is built from strings. A call to a method isn't always traced to its class, so a method may have more callers than the map lists. When the map is a few snapshots behind the newest, your assistant is told which files changed since.
 
+If your project has [rules](/your-rules), such as "src/jobs never depends on src/api", your assistant reads the ones that hold for the code it's about to change, and keeps to them. Its checkpoints are checked against them, and it tells you why when a change needs a link a rule names. This needs ShadowGit 0.3.11 or later and version 2.5.0 or later of the MCP server.
+
 This needs the ShadowGit app running, in version 0.3.10 or later.
 
 ### Sessions and checkpoints
@@ -138,7 +140,7 @@ A session keeps an assistant's edits together. Before a change that touches seve
   </Step>
 </Steps>
 
-Your assistant may do this by itself when it's about to edit several files. The ShadowGit app shows active AI sessions in its sidebar, and ends a forgotten session on its own an hour to an hour and a half after it started.
+Your assistant may do this by itself when it's about to edit several files, and in a project with [rules](/your-rules) before any edit, so its checkpoint is checked against them. The ShadowGit app shows active AI sessions in its sidebar, and ends a forgotten session on its own an hour to an hour and a half after it started.
 
 Sessions and checkpoints need the ShadowGit app running. Reading history works while it's closed.
 

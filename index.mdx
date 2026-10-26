@@ -9,6 +9,7 @@ ShadowGit is a desktop app that snapshots your projects every few minutes while 
 
 - **The Lens** reads a range of snapshots, like your assistant's last session, as numbered steps beside a canvas of the functions they add, change and remove, and says what the change makes depend on what. You see what a change does before you open the diff.
 - **The Map** draws your whole project and keeps up as snapshots land. Pick a range, and it shows where the change lands.
+- **Your rules** say what must not depend on what, in a file of your project. ShadowGit checks each AI checkpoint against them, and your assistant reads them before it edits.
 - **Restore** brings your files back to any snapshot.
 
 Through the ShadowGit MCP server, Claude Code, Cursor and Claude Desktop can read that history too: what changed in the last hour, when a file was last touched, what you tried yesterday. Your assistant stops guessing what changed. It looks.
@@ -121,7 +122,7 @@ your-project/
 
 ## Requirements
 
-- The ShadowGit app on macOS 13 or later, Windows 10 or later (64-bit) or Linux (x64 or arm64). Checkpoints need version 0.3.4 or later, the Lens 0.3.6, the Map 0.3.9, the map for your assistant 0.3.10, and the Lens's dependencies 0.3.11.
+- The ShadowGit app on macOS 13 or later, Windows 10 or later (64-bit) or Linux (x64 or arm64). Checkpoints need version 0.3.4 or later, the Lens 0.3.6, the Map 0.3.9, the map for your assistant 0.3.10, and the Lens's dependencies and your rules 0.3.11.
 - Git
 - Node.js 20 or later, which runs the MCP server
 - Claude Code, Cursor, Claude Desktop or another MCP client

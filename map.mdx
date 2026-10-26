@@ -24,7 +24,7 @@ Three buttons arrange the map:
 - **Layers** groups it by where the code runs, or else by package or folder.
 - **Change**, there while a range is lit, sets the changed code apart from the code that depends on it and from the rest of the project.
 
-The card at the left names the project and the snapshot the map is drawn from, counts its symbols, areas, calls and processes, and lists its largest areas. Type in **Find a symbol or area** to find one on the map. Test files, and folders such as `fixtures` and `e2e`, stay off the map.
+The card at the left names the project and the snapshot the map is drawn from, counts its symbols, areas, calls and processes, and lists its largest areas. Type in **Find a symbol or area** to find one on the map. Test files, and folders such as `fixtures` and `e2e`, stay off the map. **Rules** opens [your rules](/your-rules) as ShadowGit reads them.
 
 ## Keeping up with your snapshots
 
@@ -36,7 +36,7 @@ In a small project, where drawing the map takes under 3 seconds, the map redraws
 
 The Map lights the range picked in the **Range** menu on its left, the same range as the [Lens](/lens#pick-a-range). Pick **This AI session**, for example, or shift-click two snapshots. From the Lens, **Where it lands** opens the Map with its range lit.
 
-The card's title becomes **Where it lands**. It counts the new and changed pieces and lists the areas the change lands in. Under **Dependencies**, it lists what the change makes depend on what, the same lines as the [Lens](/lens#dependencies). Under **Reaches**, it names the code outside the change that depends on code it altered.
+The card's title becomes **Where it lands**. It counts the new and changed pieces and lists the areas the change lands in. Under **Your rules**, it lists the links the change adds that one of [your rules](/your-rules) names. Under **Dependencies**, it lists what the change makes depend on what, the same lines as the [Lens](/lens#dependencies). Under **Reaches**, it names the code outside the change that depends on code it altered.
 
 The map draws each dependency between its two areas: a new one in green, a gone one dashed, and two areas that now depend on each other with a line each way. On a map drawn after the change that split or renamed one of the two areas, the line is listed on the card but not drawn. Dependencies need ShadowGit 0.3.11 or later.
 
