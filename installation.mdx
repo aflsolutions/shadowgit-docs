@@ -5,7 +5,7 @@ description: "Connect ShadowGit to Claude Code, Cursor or Claude Desktop in 2 mi
 
 ## Before you start
 
-1. **The ShadowGit app**, running and tracking at least one project ([Download ShadowGit](https://shadowgit.com)). Checkpoints need version 0.3.4 or later, the Lens 0.3.6 or later, and the map 0.3.10 or later. Versions before 0.3.3 can't update themselves: [download the latest](https://shadowgit.com) once. To track a project, click **Add repository** in the app and pick its folder.
+1. **The ShadowGit app**, running and tracking at least one project ([Download ShadowGit](https://shadowgit.com)). Checkpoints need version 0.3.4 or later, the Lens 0.3.6 or later, the map 0.3.10 or later, and docs 0.3.14 or later. Versions before 0.3.3 can't update themselves: [download the latest](https://shadowgit.com) once. To track a project, click **Add repository** in the app and pick its folder.
 2. **Node.js 20 or later** ([Download Node.js](https://nodejs.org)). Check with `node --version`.
 3. **Git** ([Download Git](https://git-scm.com/downloads)). Check with `git --version`.
 
@@ -144,7 +144,7 @@ Your assistant may do this by itself when it's about to edit several files, and 
 
 Sessions and checkpoints need the ShadowGit app running. Reading history works while it's closed.
 
-### The Lens in your assistant's words
+### The Lens in your assistant's words {#lens-words}
 
 ShadowGit's [Lens](/lens) shows a range of snapshots as numbered steps beside a canvas of the code they touch. On its own, ShadowGit writes the Lens's text from the code. Your assistant, which made the change, can write it instead. At the end of a session, ask:
 
@@ -157,6 +157,24 @@ Your assistant reads the session's Lens, then writes a summary, a title and a se
 Your assistant also reads the session's [dependencies](/lens#dependencies), such as "jobs depends on api for the first time", so its words can say why one appeared. This needs ShadowGit 0.3.11 or later and version 2.4.0 or later of the MCP server.
 
 This needs the ShadowGit app running, in version 0.3.6 or later.
+
+### Your project's docs {#docs}
+
+ShadowGit's [Docs](/docs) keeps a page for each area of your project. At the end of a session, after the Lens words, your assistant writes the pages of the areas it changed, when they have no words or are behind. You can ask too:
+
+```text
+What does the billing area do?
+```
+
+Your assistant reads the area's page: its words, the facts ShadowGit draws from the map, and what changed since the words.
+
+```text
+Document this project in ShadowGit
+```
+
+Your assistant writes every page that has no words yet, five at a time, from the code it reads.
+
+This needs the ShadowGit app running, in version 0.3.14 or later, and version 2.6.0 or later of the MCP server.
 
 ## Troubleshooting
 
@@ -183,6 +201,10 @@ Update the ShadowGit app from [shadowgit.com](https://shadowgit.com).
 ### "This version of ShadowGit has no map for AI assistants"
 
 Update the ShadowGit app to 0.3.10 or later from [shadowgit.com](https://shadowgit.com).
+
+### "This version of ShadowGit has no docs pages for AI assistants"
+
+Update the ShadowGit app to 0.3.14 or later from [shadowgit.com](https://shadowgit.com).
 
 ### "ShadowGit answered with a … this version of shadowgit-mcp-server does not read"
 

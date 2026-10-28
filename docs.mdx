@@ -1,0 +1,98 @@
+---
+title: "Docs"
+description: "A page for each area of your project, in your assistant's words, that says how far the code has moved since"
+icon: "book-open"
+---
+
+Docs keeps a page for each area of your [Map](/map), plus an Overview of the whole project. Your AI assistant writes the words, through the [ShadowGit MCP server](/installation), while it still has the code in mind: at the end of a session that changed the area, or when you ask. ShadowGit adds the facts it draws from the map, checks every name the words link, and counts the changes to the area since the words were written. A page never reads as current when the code has moved on.
+
+ShadowGit runs no model and needs no API key. The words come from the assistant you already use.
+
+<Frame caption="The billing page: Claude Code's words, one change to the area since, and the facts ShadowGit draws from the map">
+  <img src="/images/docs.png" alt="Docs: a rail of pages with their states on the left, and the billing page, with a summary, paragraphs that link functions, the line 1 change since these words, and the area's facts" />
+</Frame>
+
+## Open Docs
+
+Select a project and click **Docs**, after **Map** at the top right. The rail on the left lists the Overview, then the areas in the Map's order, largest first. Under each name is how current its page is:
+
+| The rail says | Means |
+|---|---|
+| **No words yet** | The page has the facts alone. |
+| **Current** | No code in the area changed since the words. |
+| **3 changes since** | The code moved since the words, by that many changes. |
+| **No longer in the map** | The area was renamed, moved or split. |
+
+While ShadowGit counts, a page says **Counting…**.
+
+When new snapshots land, **Newer snapshots: update** appears at the top. Click it to count up to the newest one.
+
+## Read a page
+
+A page with words opens with its summary, one sentence on what the area is for, then a few paragraphs on how it works. A linked name opens the Map with that function, class or type chosen, and a linked area opens its page. Under the words, a line names who wrote them, at which snapshot and when, such as "Words by Claude Code at 9f1c2ab, Oct 28, 2026".
+
+The facts follow, from the newest map ShadowGit drew:
+
+- the area's folder, its files and symbols, and its layers;
+- **Depends on** and **Depended on by**, the areas on each side with how many links;
+- **Processes**, the flows that run through the area;
+- **Most depended on**, the area's functions, classes and types that the most code calls or imports;
+- **Your rules**, the lines of [your rules](/your-rules) that name the area.
+
+The Overview's facts are the whole project's: its files, symbols, areas and processes, its layers, and each area with its page's summary when the page has words.
+
+A page with no words shows its facts and what to ask your assistant, with a **Copy** button. ShadowGit never starts an assistant itself.
+
+<Frame caption="A page with no words yet: its facts, and what to ask your assistant">
+  <img src="/images/docs-no-words.png" alt="Docs: the jobs page, reading No words yet, with a box saying Ask your agent to write this page, the prompt and a Copy button, above the area's facts" />
+</Frame>
+
+## How current a page is
+
+When an area's code changes after its words, the page says how many changes, such as "3 changes since these words". Click it to open the [Lens](/lens) on those snapshots.
+
+ShadowGit compares the snapshot the words were written at with the newest one, so an edit you undid counts nothing. It counts:
+
+- each function, class or type of the area that was added, removed, or changed in its code, its exports or where it runs. An edit to comments or spacing doesn't count;
+- each change to what the area depends on, or to what depends on it, as the Lens's [dependencies](/lens#dependencies) say;
+- each linked name the code no longer holds. The page lists those under **Linked names no longer in the code**, and shows them as plain text.
+
+The Overview counts the areas and layers that appear or go, the changes in what layers depend on, and its own linked names that are gone.
+
+When a rename, a move or a split takes an area off the map, its page keeps its words and reads "This area is no longer in the map". The rail lists it last. When your assistant writes the page of an area that took its files, ShadowGit shows it the old words, so it can carry over what still holds.
+
+## How pages get written
+
+Your assistant writes pages with version 2.6.0 or later of the [MCP server](/installation). Pages grow where work happens, so you don't pay for a first pass over the whole project.
+
+- **At the end of a session.** After your assistant writes the session's [Lens words](/installation#lens-words), it's asked to write the pages of the areas the session changed whose pages have no words or are behind. That's at most the three areas it changed most, plus the Overview when it's behind, or when it has no words and the session changed what depends on what between layers. A page with no words can start short, and later sessions add to it.
+- **When the words still hold.** Your assistant reads what changed since, and can keep the words as they are. They're kept at the newest snapshot, and the page is current again.
+- **When you ask.** See [Your project's docs](/installation#docs) for what to ask.
+
+A summary is at most 200 characters and a body at most 400 words. ShadowGit checks every linked name against the code at the snapshot the words are written at. A link that names nothing becomes plain text, and your assistant is told which. ShadowGit checks only linked names, not names in plain text.
+
+## On the Map, and in your assistant
+
+On the [Map](/map), an area's card shows its page's summary, and **Read its page** opens it in Docs.
+
+Your assistant reads the pages too. When it looks at the map before it edits, it gets each area's summary and how many changes behind its words are, and each file it's about to change comes with its area's summary.
+
+## Where pages are kept
+
+ShadowGit keeps the pages in the project's `.shadowgit.git`, on your computer, under `refs/shadowgit/docs`. Each write is a new version, and older versions stay kept. Docs shows the newest words. The pages never go in your project's files or your own git repository.
+
+## Privacy
+
+ShadowGit uploads none of your pages. What your assistant reads to write them goes to your AI provider, like any file it opens. ShadowGit's usage data counts the pages in each state when you open Docs, and the pages kept or refused and the links dropped when your assistant writes. It never sends a path, a name or a word of a page.
+
+## Requirements
+
+Docs needs ShadowGit 0.3.14 or later. Your assistant writes and reads the pages with version 2.6.0 or later of the [MCP server](/installation).
+
+## Troubleshooting
+
+When the map can't be drawn, Docs says "Couldn't draw the map these pages are of" and why. It has the Map's limits (see the Map's [Troubleshooting](/map#troubleshooting)).
+
+If a page says "Couldn't count the changes since these words" and why, ShadowGit couldn't read the snapshots since the words. The words still show, and the rail says **Couldn't count**.
+
+If your assistant says "This version of ShadowGit has no docs pages for AI assistants", update the ShadowGit app to 0.3.14 or later from [shadowgit.com](https://shadowgit.com).
